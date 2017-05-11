@@ -1,8 +1,11 @@
+#include "SfmlMemory.h"
+#include "Def_types.h"
+
+#include <iostream>
+
 class SfmlAudio {
 };
 class SfmlVideo {
-};
-class SfmlMemory {
 };
 class SfmlKeyboard {
 };
@@ -18,13 +21,11 @@ protected:
 	SfmlMemory Memory;
 	SfmlKeyboard Keyboard;
 private:
-	char Regs[16];
-	unsigned char numReg;
-	unsigned char numTimers;
-	unsigned short PC;
-	unsigned short MEM_END;
-	unsigned short SP;
-	enum states { init, some_state, final};
+	byte Regs[16];
+	byte numReg;
+	byte numTimers;
+	two_byte PC;
+	two_byte SP;
 	enum signals { 
 		S_0NNN, S_00E0, S_00EE, S_1NNN, S_2NNN, 
 		S_3Xkk, S_4Xkk, S_5Xkk, S_6Xkk, S_7Xkk, 
@@ -36,27 +37,28 @@ private:
 		S_FX07, S_FX0A, S_FX15, S_FX18, S_FX1E, S_FX29, S_FX33, S_FX55, S_Fx65
 	};
 
-	struct token {
-		token(int _c, int _a, char _a1 = 0, char _a2 = 0, char _a3 = 0) :
-			command(_c), argscount(_a), arg1(_a1), arg2(_a2), arg3(_a3) {}
-		int command;
-		int argscount;
-		char arg1;
-		char arg2;
-		char arg3;
+	//struct token {
+	//	token(int _c, int _a, byte _a1 = 0, byte _a2 = 0, byte _a3 = 0) :
+	//		command(_c), argscount(_a), arg1(_a1), arg2(_a2), arg3(_a3) {}
+	//	int command;
+	//	int argscount;
+	//	byte arg1;
+	//	byte arg2;
+	//	byte arg3;
+	//};
+
+	two_byte masks[4]{
+		0x000F,
+		0x00F0,
+		0x0F00,
+		0xF000
 	};
 
-	short masks[4]{
-		0xC0,
-		0x30,
-		0x0C,
-		0x03
-	};
-
-	void(*stateTable[35])(token);
 	void initStateTable();
 	void do_cycle();
-	char fetch();
-	token decode(short instruction);
-	void (*execute)(token command);
+	two_byte fetch();
+	two_byte decode(two_byte instruction);
+	void RET(two_byte cmd);
+	void JP_addr(two_byte cmd);
+	// void (*execute)(token command);
 };

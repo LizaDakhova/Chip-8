@@ -3,9 +3,9 @@
 #include "Base_CPU.h"
 class BaseMemory {
 public:
-	BaseMemory();
-	void read();
-	void write();
+	BaseMemory() {}
+	// void read();
+	// void write();
 private:
 };
 
