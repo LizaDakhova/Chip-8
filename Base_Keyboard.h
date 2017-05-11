@@ -1,9 +1,10 @@
-#ifndef __BASE_CPU_H_K
-#define __BASE_CPU_H_K
+#ifndef BASE_KEYBOARD_H
+#define BASE_KEYBOARD_H
+
 #include "Base_CPU.h"
 class BaseKeyboard {
 public:
-	BaseKeyboard();
+	virtual ~BaseKeyboard() {}
 private:
 };
 

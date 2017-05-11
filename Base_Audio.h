@@ -1,12 +1,13 @@
-#ifndef __BASE_CPU_H_A
-#define __BASE_CPU_H_A
+#ifndef BASE_AUD_H
+#define BASE_AUD_H
+
 #include "Base_CPU.h"
 class BaseAudio {
 public:
-	BaseAudio();
-	void load();
-	void play();
-	int service_regs();
+	virtual ~BaseAudio() {}
+	// void load();
+	// void play();
+	// int service_regs();
 private:
 
 };

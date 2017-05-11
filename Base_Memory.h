@@ -1,9 +1,10 @@
-#ifndef __BASE_CPU_H_M
-#define __BASE_CPU_H_M
+#ifndef BASE_MEM_H
+#define BASE_MEM_H
+
 #include "Base_CPU.h"
 class BaseMemory {
 public:
-	BaseMemory() {}
+	virtual ~BaseMemory() {}
 	// void read();
 	// void write();
 private:
