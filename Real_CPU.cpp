@@ -1,4 +1,5 @@
 #include <fstream>
+#include <assert.h>
 
 #include "Real_CPU.h"
 #include "Def_types.h"
@@ -18,17 +19,36 @@ void Sfml_CPU::initStateTable() {
 	// S_6Xkk, S_7Xkk, S_8XY0, S_8XY1, S_8XY2, S_8XY3
 	// S_8XY4, S_8XY5, S_8XY6, S_8XY7, S_8XYE
 	stateTable[S_9XY0] = &Sfml_CPU::SKIP_REG_NE;
+	stateTable[S_ANNN] = &Sfml_CPU::SET_I_ADDR;
+	stateTable[S_BNNN] = &Sfml_CPU::JP_ADDR_V0;
+	stateTable[S_CXkk] = &Sfml_CPU::SET_VX_RND;
+	stateTable[S_DXYN] = &Sfml_CPU::DRW_NIBBLE;
+	// S_EX9E, S_EXA1, ... , S_FX0A - Keyboard
+	// S_FX07, ..., S_FX15, S_FX18 - timers
+	// S_FX1E, S_FX29, S_FX33, S_FX55, S_Fx65
+}
+
+two_byte Sfml_CPU::getFromStack(two_byte pos) {
+	assert(Memory->size() - pos * 2 - 1 > end_SCREEN);
+	two_byte result = (Memory->read(Memory->size() - pos * 2, 0) << 8) || 
+		Memory->read(Memory->size() - pos * 2 - 1, 0);
+	return result;
+}
+
+void Sfml_CPU::putInStack(two_byte addr, two_byte pos) {
+	Memory->write(addr & 0xFF00 >> 8, Memory->size() - pos * 2, 0);
+	Memory->write(addr & 0x00FF, Memory->size() - pos * 2 - 1, 0);
 }
 
 void Sfml_CPU::do_cycle() {
-	while (Memory.end(PC)) {
+	while (PC < start_SCREEN) {
 		two_byte current_signal = decode(fetch());
 		(this->*stateTable[current_signal])(current_signal); // check != NULL
 	}
 }
 
 two_byte Sfml_CPU::fetch() {
-	return Memory.getFromStack(SP);
+	return getFromStack(SP);
 }
 
 two_byte Sfml_CPU::decode(two_byte instruction) {

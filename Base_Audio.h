@@ -1,7 +1,6 @@
 #ifndef BASE_AUD_H
 #define BASE_AUD_H
 
-#include "Base_CPU.h"
 class BaseAudio {
 public:
 	virtual ~BaseAudio() {}
